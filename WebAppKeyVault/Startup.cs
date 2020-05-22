@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Configuration;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -41,7 +41,7 @@ namespace WebAppKeyVault
                         Mode = RetryMode.Exponential
                     }
                 };
-            var client = new SecretClient(new Uri("https://appsvcdemoskeyvault.vault.azure.net/"), new DefaultAzureCredential(),options);
+            var client = new SecretClient(new Uri("https://appsvcdemoskeyvault.vault.azure.net/"), new ClientSecretCredential("","",""), options);
 
             KeyVaultSecret secret = client.GetSecret("DemoStoreConnectionString");
 
