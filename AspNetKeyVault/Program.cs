@@ -23,7 +23,38 @@ namespace AspNetKeyVault
             webBuilder.ConfigureAppConfiguration((hostingContext, config) =>
             {
                 var settings = config.Build();
-                config.AddAzureAppConfiguration(settings["ConnectionString:AppConfig"]);
+
+                //THIS ONE FOR LOCAL RUN USING user-secrets MANAGER
+                //you'll need to first run: 
+                //      dotnet user-secrets set ConnectionString:AppConfig <your_connection_string>
+                //
+                //then uncomment the following line
+                //config.AddAzureAppConfiguration(settings["ConnectionString:AppConfig"]);
+
+                //THIS ONE FOR KEY VAULT SECRETS
+                //you'll need to first run:
+                //
+                //      setx AZURE_CLIENT_ID <clientId-of-your-service-principal>
+                //      setx AZURE_CLIENT_SECRET <clientSecret-of-your-service-principal>
+                //      setx AZURE_TENANT_ID <tenantId-of-your-service-principal>
+                //
+                //the setx commands won't be necessary when deployed to Azure as long as you have
+                //enabled managed identity and granted the web app access to they key vault:
+                //      az keyvault set-policy 
+                //          -n <your-unique-keyvault-name> 
+                //          --spn <clientId-of-your-service-principal> 
+                //          --secret-permissions delete get list set 
+                //          --key-permissions create decrypt delete encrypt get list unwrapKey wrapKey
+                //
+                //then uncomment the following line
+                config.AddAzureAppConfiguration(options =>
+                {
+                    options.Connect(settings["ConnectionString:AppConfig"])
+                            .ConfigureKeyVault(kv =>
+                            {
+                                kv.SetCredential(new DefaultAzureCredential());
+                            });
+                });
             })
             .UseStartup<Startup>());
     }
