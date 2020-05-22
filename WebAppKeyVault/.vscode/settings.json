@@ -1,0 +1,5 @@
+{
+    "appService.preDeployTask": "publish-release",
+    "appService.deploySubpath": "",
+    "appService.defaultWebAppToDeploy": "/subscriptions/d7d3afe2-7897-46f4-aa62-70ab279dcc3e/resourceGroups/AppSvcDemos/providers/Microsoft.Web/sites/WebAppKeyVault47"
+}
