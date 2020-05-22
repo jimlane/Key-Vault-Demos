@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Azure.Identity;
+using Azure.Core;
+using Azure.Security.KeyVault.Secrets;
 
 namespace WebAppKeyVault
 {
@@ -27,6 +30,22 @@ namespace WebAppKeyVault
             }
 
             app.UseRouting();
+
+            SecretClientOptions options = new SecretClientOptions()
+                {
+                    Retry =
+                    {
+                        Delay= TimeSpan.FromSeconds(2),
+                        MaxDelay = TimeSpan.FromSeconds(16),
+                        MaxRetries = 5,
+                        Mode = RetryMode.Exponential
+                    }
+                };
+            var client = new SecretClient(new Uri("https://appsvcdemoskeyvault.vault.azure.net/"), new DefaultAzureCredential(),options);
+
+            KeyVaultSecret secret = client.GetSecret("DemoStoreConnectionString");
+
+            string secretValue = secret.Value;            
 
             app.UseEndpoints(endpoints =>
             {
