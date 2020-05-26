@@ -37,6 +37,7 @@ namespace AspNetKeyVault
                 //      setx AZURE_CLIENT_ID <clientId-of-your-service-principal>
                 //      setx AZURE_CLIENT_SECRET <clientSecret-of-your-service-principal>
                 //      setx AZURE_TENANT_ID <tenantId-of-your-service-principal>
+                //      setx AZURE_USERNAME <service-principal-name>
                 //
                 //the setx commands won't be necessary when deployed to Azure as long as you have
                 //enabled managed identity and granted the web app access to they key vault:
