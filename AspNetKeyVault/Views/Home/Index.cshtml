@@ -1,5 +1,6 @@
 ﻿@using Microsoft.Extensions.Configuration
 @inject IConfiguration Configuration
+@model BlobList
 
 <style>
     body {
@@ -11,6 +12,21 @@
     }
 </style>
 
-<h1>@Configuration["TestApp:Settings:Message"]</h1>
-<!-- uncomment the following line for Key Vault usage -->
-<h1>@Configuration["TestApp:Settings:KeyVaultMessage"]</h1>
+<h1>Azure App Configuration Settings:</h1>
+<h3>@Configuration["TestApp:Settings:Message"]</h3>
+<h3>@Configuration["TestApp:Settings:KeyVaultMessage"]</h3>
+<br>
+<!-- Uncomment the following lines for Azure Key Vault ussage -->
+<h1>Azure Storage Account Display</h1>
+@{
+    var acct = ViewData["blobs"] as AspNetKeyVault.Models.BlobList;
+}
+<h3>Account Name:&nbsp;@acct.AccountName</h3>
+<h3>Container Name:&nbsp;@acct.ContainerName</h3>
+<h3>Blobs:</h3>
+@foreach (var blob in acct.Blobs)
+{
+    <li>
+        @blob.ToString()
+    </li>        
+}
