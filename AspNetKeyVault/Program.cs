@@ -29,7 +29,7 @@ namespace AspNetKeyVault
                 //      dotnet user-secrets set ConnectionString:AppConfig <your_connection_string>
                 //
                 //then uncomment the following line
-                //config.AddAzureAppConfiguration(settings["ConnectionString:AppConfig"]);
+                //config.AddAzureAppConfiguration(Configuration["ConnectionString:AppConfig"]);
 
                 //THIS ONE FOR KEY VAULT SECRETS via Azure App Configuration
                 //you'll need to first run:
