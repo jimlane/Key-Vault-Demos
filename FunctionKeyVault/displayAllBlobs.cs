@@ -12,11 +12,11 @@ using Azure.Identity;
 
 namespace FunctionKeyVault
 {
-    public static class displayBlobs
+    public static class displayAllBlobs
     {
         private static IConfiguration Configuration { set; get; }
 
-        static displayBlobs()
+        static displayAllBlobs()
         {
             //preferred methods to save connection strings locally is with environment variables or
             //local user-secrets cache instead of embedding them in local.settings.json
@@ -27,7 +27,7 @@ namespace FunctionKeyVault
             //  setx ConnectionString:AppConfig <your_connection_string>
             //  builder.AddAzureAppConfiguration(Environment.GetEnvironmentVariable("ConnectionString:AppConfig"));
             //
-            //this function uses environment variables
+            //this function uses user-secrets variables
             var builder = new ConfigurationBuilder()
                 .AddEnvironmentVariables()
                 .AddAzureAppConfiguration(options =>
@@ -41,7 +41,7 @@ namespace FunctionKeyVault
             Configuration = builder.Build();
         }
 
-        [FunctionName("displayBlobs")]
+        [FunctionName("displayAllBlobs")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
