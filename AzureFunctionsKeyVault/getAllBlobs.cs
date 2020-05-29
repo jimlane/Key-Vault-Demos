@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -6,41 +7,36 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.AzureAppConfiguration;
+using Microsoft.Extensions.Configuration.UserSecrets;
 using Azure.Storage.Blobs;
 using Azure.Identity;
+using Newtonsoft.Json;
 
-namespace FunctionKeyVault
+namespace AzureFunctionsKeyVault
 {
-    public static class displayBlobs
+    public class getAllBlobs
     {
-        private static IConfiguration Configuration { set; get; }
+        private static IConfiguration Configuration { get; set; }
+        private static IConfigurationRefresher ConfigurationRefresher { set; get; }
 
-        static displayBlobs()
+        static getAllBlobs()
         {
-            //preferred methods to save connection strings locally is with environment variables or
-            //local user-secrets cache instead of embedding them in local.settings.json
-            //
-            //  dotnet user-secrets set ConnectionString:AppConfig <your_connection_string>
-            //  builder.AddAzureAppConfiguration(settings["ConnectionString:AppConfig"]);
-            //
-            //  setx ConnectionString:AppConfig <your_connection_string>
-            //  builder.AddAzureAppConfiguration(Environment.GetEnvironmentVariable("ConnectionString:AppConfig"));
-            //
-            //this function uses environment variables
             var builder = new ConfigurationBuilder()
-                .AddEnvironmentVariables()
-                .AddAzureAppConfiguration(options =>
+                .AddUserSecrets<getAllBlobs>();
+            Configuration = builder.Build();
+            builder.AddAzureAppConfiguration(options =>
                 {
-                    options.Connect(Environment.GetEnvironmentVariable($"ConnectionString:AppConfig"))
-                            .ConfigureKeyVault(kv =>
-                            {
-                                kv.SetCredential(new DefaultAzureCredential());
-                            });
+                    options.Connect(Configuration["ConnectionString:AppConfig"])
+                        .ConfigureKeyVault(kv =>
+                        {
+                            kv.SetCredential(new DefaultAzureCredential());
+                        });
                 });
             Configuration = builder.Build();
         }
 
-        [FunctionName("displayBlobs")]
+        [FunctionName("getAllBlobs")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
