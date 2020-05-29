@@ -14,18 +14,35 @@ using Newtonsoft.Json;
 
 namespace AzureFunctionsKeyVault
 {
+    //preferred methods to save connection strings locally is with environment variables or
+    //local user-secrets cache instead of embedding them in local.settings.json
+    //
+    //  dotnet user-secrets set <your_config_name> <your_connection_string>
+    //  builder.AddAzureAppConfiguration(Configuration["<your_config_name>"]);
+    //
+    //  setx <your_config_name> <your_connection_string>
+    //  builder.AddAzureAppConfiguration(Environment.GetEnvironmentVariable("<your_config_name>"));
+    //
+    //this function utilized environment variables
+
     public static class getBlobs
     {
+        //we'll need a custom configuration object in order to access environment variables
         private static IConfiguration Configuration { get; set; }
         private static IConfigurationRefresher ConfigurationRefresher { set; get; }
-
+        
+        //in order to access environment variables a custom constructor must be injected into the function
         static getBlobs()
         {
+            //instantiate your own ConfigurationBuilder and inject environment variables
             var builder = new ConfigurationBuilder()
                 .AddEnvironmentVariables()
+                //tell the config to get stuff from and Azure AppConfig object
                 .AddAzureAppConfiguration(options =>
                 {
+                    //here we retrieve the connection string for Azure AppConfig from the environment variable
                     options.Connect(System.Environment.GetEnvironmentVariable("ConnectionString:AppConfig"))
+                        //this step is required if your AppConfig contains entries stored in a KeyVault
                         .ConfigureKeyVault(kv =>
                         {
                             kv.SetCredential(new DefaultAzureCredential());
