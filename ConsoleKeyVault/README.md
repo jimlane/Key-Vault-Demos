@@ -2,6 +2,16 @@
 
 ## Code in this repo demonstrates accessing Azure Key Vault from a C# console application. 
 
+<properties
+    pageTitle="Key Vault Console App Demo"
+    description="Sample application demonstrating usage of Azure Key Vault from a C# console application"
+    services="key-vault,app-configuration,blog-storage"
+    documentationCenter="Azure"
+/>
+
+<tags
+    ms.service="key-vault"
+    ms.devlang="C#"/>
 
 ![Azure Blob Storage Photo Gallery Web Application Sample .NET](../images/KeyVault_ConsoleApp1.png)
 
