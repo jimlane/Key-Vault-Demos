@@ -3,7 +3,7 @@
 ## Code in this repo demonstrates accessing Azure Key Vault from a C# console application. 
 
 
-![Azure Blob Storage Photo Gallery Web Application Sample .NET](../images/KeyVault_ConsoleApp2.png)
+![Azure Blob Storage Photo Gallery Web Application Sample .NET](../images/KeyVault_ConsoleApp1.png)
 
 Assemblies utilized:
 - Azure.Identity
