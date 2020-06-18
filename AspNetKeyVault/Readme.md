@@ -19,9 +19,12 @@ Assemblies utilized:
 - Azure.Identity
 - Azure.Security.KeyVault
 - Azure.Storage
-- System.Configuration
+- Microsoft.Azure.Services.AppAuthentication
+- Microsoft.Azure.KeyVault
 
-The application utilizes the Azure.Identity.SecretClient class in order to access an Azure Key Vault. A local instance of this class is instantiated utilizing:
+The application provides examples for connecting to Azure Key Vault using either KeyVaultClient or AzureAppConfiguration. Either one of these classes can be injected into an ASP.Net Core configuration by implementing a custom IHostBuilder during startup. Both implementations are demonstrated.
+
+KeyVaultClient once provided the URI endpoint of an Azure Key Vault instance will attempt to attain a connection token via:
 - Key Vault URI
 - Azure.Identity.ClientSecretCredential token
 
