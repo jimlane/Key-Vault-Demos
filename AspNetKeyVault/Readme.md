@@ -1,11 +1,11 @@
-# Key Vault Demos - C# Console App
+# Key Vault Demos - ASP.Net Web App
 
-## Code in this repo demonstrates accessing Azure Key Vault from a C# console application. 
+## Code in this repo demonstrates accessing Azure Key Vault from an ASP.Net web application 
 
 <properties
-    pageTitle="Key Vault Console App Demo"
-    description="Sample application demonstrating usage of Azure Key Vault from a C# console application"
-    services="key-vault,app-configuration,blog-storage"
+    pageTitle="Key Vault ASP.Net Demo"
+    description="Sample application demonstrating usage of Azure Key Vault from an ASP.Net web application"
+    services="key-vault,app-configuration,blob-storage"
     documentationCenter="Azure"
 />
 
