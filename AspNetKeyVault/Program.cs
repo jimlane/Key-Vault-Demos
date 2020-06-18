@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
+using Microsoft.Azure.KeyVault;
+using Microsoft.Azure.Services.AppAuthentication;
+using Microsoft.Extensions.Configuration.AzureKeyVault;
 using Azure.Identity;
 
 namespace AspNetKeyVault
@@ -18,37 +21,42 @@ namespace AspNetKeyVault
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
+        // To connect directly to Azure Key Vault set the following environment variable:
+        //      KEYVAULT_ENDPOINT https://<kv_name>.vault.azure.net/
+        // then uncomment the following code block
+
+            Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((ctx, builder) =>
+                {
+                    var keyVaultEndpoint = getKeyVaultEndpoint();
+                    if (!string.IsNullOrEmpty(keyVaultEndpoint))
+                    {
+                        var azureServiceTokenProvider = new AzureServiceTokenProvider();
+                        var keyVaultClient = new KeyVaultClient(
+                            new KeyVaultClient.AuthenticationCallback(
+                                azureServiceTokenProvider.KeyVaultTokenCallback));
+                        builder.AddAzureKeyVault(
+                            keyVaultEndpoint, keyVaultClient, new DefaultKeyVaultSecretManager());
+                    }
+                })
+                .ConfigureWebHostDefaults(webBuilder => 
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
+        
+            private static string getKeyVaultEndpoint() => Environment.GetEnvironmentVariable("KEYVAULT_ENDPOINT");
+
+
+            // To use an Azure App Configuration to connect to Azure Key Vault set the following environment variable:
+            //      ConnectionString:AppConfig <ac_connection_string>
+            // then uncomment the following code block
+/*
             Host.CreateDefaultBuilder(args)
             .ConfigureWebHostDefaults(webBuilder =>
             webBuilder.ConfigureAppConfiguration((hostingContext, config) =>
             {
                 var settings = config.Build();
-
-                //THIS ONE FOR LOCAL RUN USING user-secrets MANAGER for access to Azure App Configuration
-                //you'll need to first run: 
-                //      dotnet user-secrets set ConnectionString:AppConfig <your_connection_string>
-                //
-                //then uncomment the following line
-                //config.AddAzureAppConfiguration(Configuration["ConnectionString:AppConfig"]);
-
-                //THIS ONE FOR KEY VAULT SECRETS via Azure App Configuration
-                //you'll need to first run:
-                //
-                //      setx AZURE_CLIENT_ID <clientId-of-your-service-principal>
-                //      setx AZURE_CLIENT_SECRET <clientSecret-of-your-service-principal>
-                //      setx AZURE_TENANT_ID <tenantId-of-your-service-principal>
-                //      setx AZURE_USERNAME <service-principal-name>
-                //
-                //the setx commands won't be necessary when deployed to Azure as long as you have
-                //enabled managed identity and granted the web app access to they key vault:
-                //      az keyvault set-policy 
-                //          -n <your-unique-keyvault-name> 
-                //          --spn <clientId-of-your-service-principal> 
-                //          --secret-permissions delete get list set 
-                //          --key-permissions create decrypt delete encrypt get list unwrapKey wrapKey
-                //
-                //then uncomment the following line
-                config.AddAzureAppConfiguration(options =>
+                 config.AddAzureAppConfiguration(options =>
                 {
                     options.Connect(settings["ConnectionString:AppConfig"])
                             .ConfigureKeyVault(kv =>
@@ -58,5 +66,23 @@ namespace AspNetKeyVault
                 });
             })
             .UseStartup<Startup>());
+
+            //IF YOU WANT TO USE MANAGED IDENTITIES FOR ACCESS INSTEAD
+            //for local runs you'll need to first run these commands:
+            //
+            //      setx AZURE_CLIENT_ID <clientId-of-your-service-principal>
+            //      setx AZURE_CLIENT_SECRET <clientSecret-of-your-service-principal>
+            //      setx AZURE_TENANT_ID <tenantId-of-your-service-principal>
+            //      setx AZURE_USERNAME <service-principal-name>
+            //
+            //the setx commands won't be necessary when deployed to Azure as long as you have
+            //enabled managed identity and granted the web app access to they key vault:
+            //      az keyvault set-policy 
+            //          -n <your-unique-keyvault-name> 
+            //          --spn <clientId-of-your-service-principal> 
+            //          --secret-permissions delete get list set 
+            //          --key-permissions create decrypt delete encrypt get list unwrapKey wrapKey
+            //
+    */
     }
 }

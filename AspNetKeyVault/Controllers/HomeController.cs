@@ -26,8 +26,12 @@ namespace AspNetKeyVault.Controllers
 
         public IActionResult Index()
         {
-            BlobServiceClient blobServiceClient = new BlobServiceClient(_configuration["TestApp:Settings:StgConnString"]);
-            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(_configuration["TestApp:Settings:StgContainerName"]);
+            //This for Azure App Configuration
+            //BlobServiceClient blobServiceClient = new BlobServiceClient(_configuration["TestApp:Settings:StgConnString"]);
+            //BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(_configuration["TestApp:Settings:StgContainerName"]);
+            //This for Azure Key Vault
+            BlobServiceClient blobServiceClient = new BlobServiceClient(_configuration["DemoStoreConnectionString"]);
+            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(_configuration["DemoStoreContainerName"]);
             BlobList blobList = new BlobList();
             blobList.AccountName = containerClient.Uri.ToString();
             blobList.ContainerName = containerClient.Name.ToString();
