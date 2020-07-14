@@ -13,7 +13,7 @@
     ms.service="key-vault"
     ms.devlang="C#"/>
 
-![Azure Blob Storage Photo Gallery Web Application Sample .NET](../images/KeyVault_ConsoleApp1.png)
+![Azure Blob Storage Photo Gallery Web Application Sample .NET](../images/KeyVault_ConsoleApp3.png)
 
 Assemblies utilized:
 - Azure.Identity
