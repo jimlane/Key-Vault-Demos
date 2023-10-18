@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
@@ -10,7 +10,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.31" />
     <PackageReference Include="Microsoft.Extensions.Configuration.AzureAppConfiguration" Version="3.0.1" />
-    <PackageReference Include="Azure.Identity" Version="1.1.1" />
+    <PackageReference Include="Azure.Identity" Version="1.10.2" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.4.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="3.0.1" />
   </ItemGroup>
